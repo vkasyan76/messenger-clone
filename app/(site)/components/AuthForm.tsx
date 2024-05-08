@@ -1,5 +1,6 @@
 "use client";
 
+import axios from "axios";
 import Button from "@/app/components/inputs/Button";
 import Input from "@/app/components/inputs/Input";
 import { useCallback, useState } from "react";
@@ -35,8 +36,7 @@ const AuthForm = () => {
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
     if (variant === "REGISTER") {
-      //   axios
-      //     .post("/api/register", data)
+      axios.post("/api/register", data);
       //     .then(() => signIn("credentials", data))
       //     .catch(() => toast.error("Something went wrong!"))
       //     .finally(() => setIsLoading(false));
