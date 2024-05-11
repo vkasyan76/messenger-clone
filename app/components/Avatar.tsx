@@ -13,7 +13,7 @@ const Avatar: React.FC<AvatarProps> = ({ user }) => {
         //   inline-block will wrap the element to prevent the text inside from extending beyond its parent.
         // overflow-hidden utility to clip any content within an element that overflows the bounds of that element.
         className="relative inline-block rounded-full
-          overflow-hidden h-9 w-9 md:h-11 md:w-11 "
+        overflow-hidden h-9 w-9 md:h-11 md:w-11"
       >
         {/* PLACEHOLDER IMAGE */}
         <Image
@@ -24,7 +24,7 @@ const Avatar: React.FC<AvatarProps> = ({ user }) => {
       </div>
       <span
         className="absolute block rounded-full bg-green-500 ring-2 ring-white
-            top-0 right-0  h-2 w-2 md:h-3 md:w-3"
+          top-0 right-0  h-2 w-2 md:h-3 md:w-3"
       />
     </div>
   );
