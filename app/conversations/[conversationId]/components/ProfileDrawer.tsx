@@ -11,7 +11,9 @@ import {
 } from "@headlessui/react";
 import { IoClose, IoTrash } from "react-icons/io5";
 import Avatar from "@/app/components/Avatar";
-// import ConfirmModal from "./ConfirmModal";
+// import Modal from "@/app/components/Modal";
+import ConfirmModal from "./ConfirmModal";
+
 // import AvatarGroup from "@/app/components/AvatarGroup";
 // import useActiveList from "@/app/hooks/useActiveList";
 interface ProfileDrawerProps {
@@ -27,6 +29,9 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
   data,
 }) => {
   const otherUser = useOtherUser(data);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const joinedDate = useMemo(() => {
@@ -45,127 +50,142 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
   }, [data]);
 
   return (
-    <Transition show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={onClose}>
-        <TransitionChild
-          as={Fragment}
-          enter="ease-out duration-500"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-500"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div className="fixed inset-0 bg-black bg-opacity-40" />
-        </TransitionChild>
-        <div className="fixed inset-0 overflow-hidden">
-          <div className="absolute inset-0 overflow-hidden">
-            <div
-              className="pointer-events-none fixed inset-y-0 right-0
+    <>
+      {/* <Modal isOpen={confirmOpen} onClose={() => setConfirmOpen(false)}>
+        <div className="bg-white p-5">
+          <p>Hello Modal!</p>
+        </div>
+      </Modal> */}
+
+      {/* instead of the Modal we'll use ConfirmModal - self-closing tag*/}
+
+      <ConfirmModal
+        isOpen={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+      />
+
+      <Transition show={isOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-50" onClose={onClose}>
+          <TransitionChild
+            as={Fragment}
+            enter="ease-out duration-500"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-500"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black bg-opacity-40" />
+          </TransitionChild>
+          <div className="fixed inset-0 overflow-hidden">
+            <div className="absolute inset-0 overflow-hidden">
+              <div
+                className="pointer-events-none fixed inset-y-0 right-0
                 flex max-w-full pl-10"
-            >
-              {/* Transition for the drawer */}
-              <TransitionChild
-                as={Fragment}
-                enter="transform transition ease-in-out duration-500"
-                enterFrom="translate-x-full"
-                enterTo="translate-x-0"
-                leave="transform transition ease-in-out duration-500"
-                leaveTo="translate-x-full"
               >
-                <DialogPanel className="pointer-events-auto w-screen max-w-md">
-                  <div
-                    className="flex h-full flex-col
+                {/* Transition for the drawer */}
+                <TransitionChild
+                  as={Fragment}
+                  enter="transform transition ease-in-out duration-500"
+                  enterFrom="translate-x-full"
+                  enterTo="translate-x-0"
+                  leave="transform transition ease-in-out duration-500"
+                  leaveTo="translate-x-full"
+                >
+                  <DialogPanel className="pointer-events-auto w-screen max-w-md">
+                    <div
+                      className="flex h-full flex-col
                         overflow-y-scroll bg-white py-6 shadow-xl"
-                  >
-                    <div className="px-4 sm:px-6">
-                      <div className="flex items-start justify-end">
-                        <div className="ml-3 flex h-7 items-center">
-                          {/* Close button */}
-                          <button
-                            onClick={onClose}
-                            type="button"
-                            className="rounded-md bg-white text-gray-400 hover:text-gray-500
+                    >
+                      <div className="px-4 sm:px-6">
+                        <div className="flex items-start justify-end">
+                          <div className="ml-3 flex h-7 items-center">
+                            {/* Close button */}
+                            <button
+                              onClick={onClose}
+                              type="button"
+                              className="rounded-md bg-white text-gray-400 hover:text-gray-500
                                 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
-                          >
-                            <span className="sr-only">Close panel</span>
-                            <IoClose size={24} />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                    {/* Avatar div */}
-                    <div className="relative mt-6 flex-1 px-4 sm:px-6">
-                      <div className="flex flex-col items-center">
-                        <div className="mb-2">
-                          <Avatar user={otherUser} />
-                        </div>
-                        <div>{title}</div>
-                        <div className="text-sm text-gray-500">
-                          {statusText}
-                        </div>
-                        {/* Button to delete the conversation */}
-                        <div className="flex gap-10 my-8">
-                          <div
-                            onClick={() => {}}
-                            className="flex flex-col gap-3
-                                items-center cursor-pointer hover:opacity-75"
-                          >
-                            {/* 2 divs: onw is for icin and one is for text Delete*/}
-                            <div
-                              className="w-10 h-10 bg-neutral-100 rounded-full
-                                  flex items-center justify-center"
                             >
-                              <IoTrash size={20} />
-                            </div>
-                            <div className="text-sm font-light text-neutral-600">
-                              Delete
-                            </div>
+                              <span className="sr-only">Close panel</span>
+                              <IoClose size={24} />
+                            </button>
                           </div>
                         </div>
-                        {/* Additional information */}
-                        <div className="w-full pb-5 pt-5 sm:px-0 sm:pt-0">
-                          {/* description list */}
-                          <dl className="space-y-8 px-4 sm:space-y-6 m:px-6">
-                            {/* display only when not a a group chat: user e-mail */}
-                            {!data.isGroup && (
-                              <div>
-                                <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
-                                  Email
-                                </dt>
-                                <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
-                                  {otherUser.email}
-                                </dd>
+                      </div>
+                      {/* Avatar div */}
+                      <div className="relative mt-6 flex-1 px-4 sm:px-6">
+                        <div className="flex flex-col items-center">
+                          <div className="mb-2">
+                            <Avatar user={otherUser} />
+                          </div>
+                          <div>{title}</div>
+                          <div className="text-sm text-gray-500">
+                            {statusText}
+                          </div>
+                          {/* Button to delete the conversation */}
+                          <div className="flex gap-10 my-8">
+                            <div
+                              onClick={() => setConfirmOpen(true)}
+                              className="flex flex-col gap-3
+                                items-center cursor-pointer hover:opacity-75"
+                            >
+                              {/* 2 divs: onw is for icin and one is for text Delete*/}
+                              <div
+                                className="w-10 h-10 bg-neutral-100 rounded-full
+                                  flex items-center justify-center"
+                              >
+                                <IoTrash size={20} />
                               </div>
-                            )}
-                            {/* display only when not a a group chat: date joined*/}
-                            {!data.isGroup && (
-                              <>
-                                <hr />
+                              <div className="text-sm font-light text-neutral-600">
+                                Delete
+                              </div>
+                            </div>
+                          </div>
+                          {/* Additional information */}
+                          <div className="w-full pb-5 pt-5 sm:px-0 sm:pt-0">
+                            {/* description list */}
+                            <dl className="space-y-8 px-4 sm:space-y-6 m:px-6">
+                              {/* display only when not a a group chat: user e-mail */}
+                              {!data.isGroup && (
                                 <div>
                                   <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
-                                    Joined
+                                    Email
                                   </dt>
                                   <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
-                                    <time dateTime={joinedDate}>
-                                      {joinedDate}
-                                    </time>
+                                    {otherUser.email}
                                   </dd>
                                 </div>
-                              </>
-                            )}
-                          </dl>
+                              )}
+                              {/* display only when not a a group chat: date joined*/}
+                              {!data.isGroup && (
+                                <>
+                                  <hr />
+                                  <div>
+                                    <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
+                                      Joined
+                                    </dt>
+                                    <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
+                                      <time dateTime={joinedDate}>
+                                        {joinedDate}
+                                      </time>
+                                    </dd>
+                                  </div>
+                                </>
+                              )}
+                            </dl>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </DialogPanel>
-              </TransitionChild>
+                  </DialogPanel>
+                </TransitionChild>
+              </div>
             </div>
           </div>
-        </div>
-      </Dialog>
-    </Transition>
+        </Dialog>
+      </Transition>
+    </>
   );
 };
 
