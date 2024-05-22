@@ -13,6 +13,7 @@ import { IoClose, IoTrash } from "react-icons/io5";
 import Avatar from "@/app/components/Avatar";
 // import Modal from "@/app/components/Modal";
 import ConfirmModal from "./ConfirmModal";
+import AvatarGroup from "@/app/components/AvatarGroup";
 
 // import AvatarGroup from "@/app/components/AvatarGroup";
 // import useActiveList from "@/app/hooks/useActiveList";
@@ -30,7 +31,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
 }) => {
   const otherUser = useOtherUser(data);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -117,7 +118,12 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                       <div className="relative mt-6 flex-1 px-4 sm:px-6">
                         <div className="flex flex-col items-center">
                           <div className="mb-2">
-                            <Avatar user={otherUser} />
+                            {/* <Avatar user={otherUser} /> */}
+                            {data.isGroup ? (
+                              <AvatarGroup users={data.users} />
+                            ) : (
+                              <Avatar user={otherUser} />
+                            )}
                           </div>
                           <div>{title}</div>
                           <div className="text-sm text-gray-500">
@@ -146,7 +152,36 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                           <div className="w-full pb-5 pt-5 sm:px-0 sm:pt-0">
                             {/* description list */}
                             <dl className="space-y-8 px-4 sm:space-y-6 m:px-6">
-                              {/* display only when not a a group chat: user e-mail */}
+                              {/* display only if IS group */}
+                              {data.isGroup && (
+                                <div>
+                                  <dt
+                                    className="
+                                      text-sm
+                                      font-medium
+                                      text-gray-500
+                                      sm:w-40
+                                      sm:flex-shrink-0
+                                    "
+                                  >
+                                    Members
+                                  </dt>
+                                  <dd
+                                    className="
+                                      mt-1
+                                      text-sm
+                                      text-gray-900
+                                      sm:col-span-2
+                                    "
+                                  >
+                                    {data.users
+                                      .map((user) => user.name)
+                                      .join(", ")}
+                                  </dd>
+                                </div>
+                              )}
+
+                              {/* display only when NOT a a group chat: user e-mail */}
                               {!data.isGroup && (
                                 <div>
                                   <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
@@ -157,7 +192,8 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                   </dd>
                                 </div>
                               )}
-                              {/* display only when not a a group chat: date joined*/}
+
+                              {/* display only when NOT a a group chat: date joined*/}
                               {!data.isGroup && (
                                 <>
                                   <hr />
